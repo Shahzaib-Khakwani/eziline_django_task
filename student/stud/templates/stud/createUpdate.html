@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Create{% endblock %}
+{% block content %}
+<h1>Create New Studnet</h1>
+<div>
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% else %}
+<p>Create New Student</p>
+{% endif %}
+<div class="login-form">
+{% if student %}
+<form action="{% url 'stud:update' student.id %}" method="post">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <p><input type="submit" value="Update"></p>
+</form>
+
+{% else %}
+<form action="{% url 'stud:create' %}" method="post">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <p><input type="submit" value="Create"></p>
+</form>
+    
+{% endif %}
+
+
+
+</div>
+</div>
+{% endblock %}

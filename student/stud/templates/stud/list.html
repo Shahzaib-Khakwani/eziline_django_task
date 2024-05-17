@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}List{% endblock %}
+{% block content %}
+<button type="button" class="btn btn-warning"><a href="{% url 'stud:create' %}">Create</a></button>
+{% for student in students %}
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title">{{ student.roll_no }}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{ student.first_name }}</h6>
+      <h6 class="card-subtitle mb-2 text-muted">{{ student.last_name }}</h6>
+      <p class="card-text">{{ student.father_name }}</p>
+      <a href="{% url 'stud:delete' student.pk %}" class="card-link">Delete</a>
+      <a href="{% url 'stud:update' student.pk %}" class="card-link">Update</a>
+    </div>
+  </div>
+{% endfor %}
+
+<div id="ajax-content">
+
+
+</div>
+
+{% endblock %}
+
+
+{% block include_js %}
+<script>
+    $(document).ready(function() {
+  $("#ajax-content").html("Loading...");
+
+    function updateData() {
+        $.ajax({
+        url: "{% url 'stud:list_student_json' %}",
+        type: "GET",
+        success: function(data) {
+            $("#ajax-content").empty();
+            console.log(data); 
+
+            for (var i = 0; i < data.students.length; i++) {
+            var student = data.students[i];
+            var temp = "<li>" + student.roll_no + "</li>";
+            $("#ajax-content").append(temp);
+            }
+        },
+        error: function(error) {
+            $("#ajax-content").html("Error: " + error);
+        }
+        });
+    }
+
+  updateData();
+
+  setInterval(updateData, 2000);
+});
+
+    </script>
+{% endblock %}
+
